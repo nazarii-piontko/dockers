@@ -1,20 +1,24 @@
 FROM nginx:latest
 
-RUN echo 'deb http://ftp.debian.org/debian jessie-backports main' | tee /etc/apt/sources.list.d/backports.list && \
-    apt-get update && \
-    apt-get install -y python-certbot-apache
+ENV WEB_DOMAIN localhost
 
-ENV HTTPS False
-ENV WEB_DOMAIN domain.com
 ENV APP_PROTOCOL http
 ENV APP_HOST 127.0.0.1
 ENV APP_PORT 5000
 
+ENV HTTPS False
+ENV HTTPS_CERT_PUBLIC_PATH ""
+ENV HTTPS_CERT_PRIVATE_PATH ""
+ENV HTTPS_LETSENCRYPT_EMAIL ""
+ENV HTTPS_DHPARAM_LEN 1024
+
 VOLUME /etc/letsencrypt
 
-COPY conf/nginx.conf /etc/nginx/
-COPY conf/conf.d/* /etc/nginx/conf.d/
-COPY ./run.sh /
-RUN chmod +x /run.sh
+COPY conf/ /etc/nginx/
+COPY ./*.sh /root/
+RUN chmod +x /root/*.sh
 
-ENTRYPOINT ["/run.sh"]
+RUN ln -sf /dev/stdout /var/log/nginx/access_reverse_proxy.log \
+    && ln -sf /var/log/nginx/error_reverse_proxy.log
+
+ENTRYPOINT ["/root/run.sh"]
