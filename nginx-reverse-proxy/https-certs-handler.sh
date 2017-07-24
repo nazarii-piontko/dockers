@@ -24,14 +24,26 @@ elif [ ! -z "$HTTPS_LETSENCRYPT_EMAIL" ]; then
     
     echo "LetsEncrypt intallation is finished."
 
-    if [ ! -d "/etc/letsencrypt/live'/"$WEB_DOMAIN"'" ]; then
+    if [ ! -d "/etc/letsencrypt/live/"$WEB_DOMAIN"" ]; then
         echo "Start LetsEncrypt certificate generation for '"$WEB_DOMAIN"' (email: '"$HTTPS_LETSENCRYPT_EMAIL"')..."
 
-        letsencrypt certonly \
-                    --webroot -w "/var/www/"$WEB_DOMAIN"" \
-                    -d "$WEB_DOMAIN" -d "www.""$WEB_DOMAIN" \
-                    --email "$HTTPS_LETSENCRYPT_EMAIL" \
-                    --agree-tos
+        if [ "$SUPPORTS_WWW_SUBDOMAIN" = True ]; then
+            letsencrypt certonly \
+                        --webroot -w "/var/www/"$WEB_DOMAIN"" \
+                        -d "$WEB_DOMAIN" -d "www.""$WEB_DOMAIN" \
+                        --email "$HTTPS_LETSENCRYPT_EMAIL" \
+                        --agree-tos
+                        --non-interactive
+                        --keep-until-expiring
+        else
+            letsencrypt certonly \
+                        --webroot -w "/var/www/"$WEB_DOMAIN"" \
+                        -d "$WEB_DOMAIN"
+                        --email "$HTTPS_LETSENCRYPT_EMAIL" \
+                        --agree-tos
+                        --non-interactive
+                        --keep-until-expiring
+        fi
 
         echo "LetsEncrypt certificate is generated."
     else

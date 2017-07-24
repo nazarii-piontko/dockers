@@ -9,6 +9,13 @@ if [ ! -f "$PROVISIONED_CHECK_FILE" ]; then
     # Execute once
     echo "Start provision..."
 
+    if [ "$SUPPORTS_WWW_SUBDOMAIN" = True ]; then
+        nginx_domains="www.$WEB_DOMAIN $WEB_DOMAIN"
+    else
+        nginx_domains=$WEB_DOMAIN
+    fi
+
+    sed -i 's|${WEB_DOMAINS}|'"$nginx_domains"'|g' /etc/nginx/conf.d/*
     sed -i 's|${WEB_DOMAIN}|'"$WEB_DOMAIN"'|g' /etc/nginx/conf.d/*
     sed -i 's|${APP_PROTOCOL}|'"$APP_PROTOCOL"'|g' /etc/nginx/conf.d/*
     sed -i 's|${APP_HOST}|'"$APP_HOST"'|g' /etc/nginx/conf.d/*
