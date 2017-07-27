@@ -2,7 +2,12 @@ Basic NGINX reverse proxy container with HTTPS support and LetsEncrypt support
 
 Run example:
 ```
-docker run -p 80:80 -e "WEB_DOMAIN=my.host.com" -e "APP_HOST=backend.domain" --name nginx nazar89/nginx-reverse-proxy
+docker run \
+       -p 80:80 \
+       -e "WEB_DOMAIN=my.host.com" \
+       -e "APP_HOST=backend.domain" \
+       --name nginx \
+       nazar89/nginx-reverse-proxy
 ```
 
 Docker container can be controlled via environment variables:
