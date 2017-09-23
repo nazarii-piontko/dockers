@@ -58,10 +58,10 @@ elif [ ! -z "$HTTPS_LETSENCRYPT_EMAIL" ]; then
     echo "Setting up cron job for LetsEncrypt renew procedure..."
 
     apt-get install -y --no-install-recommends cron
-    printf "0 1 * * * letsencrypt renew --deploy-hook 'nginx -s reload'\n" > "$LETSENCRYPT_CRON_FILE"
+    rm -f /etc/cron.d/certbot # remove default certbot cron-job
+    printf "0 1 * * * letsencrypt renew --post-hook \"nginx -s reload\"\n" > "$LETSENCRYPT_CRON_FILE"
     chmod 0644 "$LETSENCRYPT_CRON_FILE"
     crontab "$LETSENCRYPT_CRON_FILE"
-
     echo "Cron job for LetsEncrypt renew procedure is setted up."
 
 else
