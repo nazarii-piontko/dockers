@@ -32,16 +32,16 @@ elif [ ! -z "$HTTPS_LETSENCRYPT_EMAIL" ]; then
                         --webroot -w "/var/www/"$WEB_DOMAIN"" \
                         -d "$WEB_DOMAIN" -d "www.""$WEB_DOMAIN" \
                         --email "$HTTPS_LETSENCRYPT_EMAIL" \
-                        --agree-tos
-                        --non-interactive
+                        --agree-tos \
+                        --non-interactive \
                         --keep-until-expiring
         else
             letsencrypt certonly \
                         --webroot -w "/var/www/"$WEB_DOMAIN"" \
-                        -d "$WEB_DOMAIN"
+                        -d "$WEB_DOMAIN" \
                         --email "$HTTPS_LETSENCRYPT_EMAIL" \
-                        --agree-tos
-                        --non-interactive
+                        --agree-tos \
+                        --non-interactive \
                         --keep-until-expiring
         fi
 
@@ -58,7 +58,7 @@ elif [ ! -z "$HTTPS_LETSENCRYPT_EMAIL" ]; then
     echo "Setting up cron job for LetsEncrypt renew procedure..."
 
     apt-get install -y --no-install-recommends cron
-    printf "0 1 * * * letsencrypt renew --post-hook 'nginx -s reload'\n" > "$LETSENCRYPT_CRON_FILE"
+    printf "0 1 * * * letsencrypt renew --deploy-hook 'nginx -s reload'\n" > "$LETSENCRYPT_CRON_FILE"
     chmod 0644 "$LETSENCRYPT_CRON_FILE"
     crontab "$LETSENCRYPT_CRON_FILE"
 
