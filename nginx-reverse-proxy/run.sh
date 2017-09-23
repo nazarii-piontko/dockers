@@ -31,15 +31,17 @@ if [ ! -f "$PROVISIONED_CHECK_FILE" ]; then
     fi
 
     printf "# DO NOT EDIT OR REMOVE\n# This file indicates Docker container is provisioned\n" > "$PROVISIONED_CHECK_FILE"
+    
+    echo "Stopping nginx daemon..."
+    nginx -s quit
+    PID=$(cat /var/run/nginx.pid)
+    while [ -d "/proc/$PID" -a -f /var/run/nginx.pid ]; do
+        sleep 1
+    done
+    echo "Stopping nginx daemon...done"
+    
     echo "Provision is finished"
-
-else
-
-    # Provisioned
-    # Start nginx
-    nginx -g "daemon on;"
-
 fi
 
-trap : TERM INT
-sleep infinity & wait
+echo "Starting NGINX..."
+nginx -g "daemon off;"

@@ -21,6 +21,6 @@ COPY ./*.sh /root/
 RUN chmod +x /root/*.sh
 
 RUN ln -sf /dev/stdout /var/log/nginx/access_reverse_proxy.log \
-    && ln -sf /var/log/nginx/error_reverse_proxy.log
+    && ln -sf /dev/stderr /var/log/nginx/error_reverse_proxy.log
 
 ENTRYPOINT ["/root/run.sh"]
