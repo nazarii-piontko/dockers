@@ -1,7 +1,8 @@
 FROM ubuntu:latest
 
-COPY sphinx.conf /etc/sphinx/sphinx.conf
 COPY *.sh /usr/bin/
+COPY sphinx.conf /etc/sphinx/sphinx.conf
+COPY sphinx-sample.tsv /var/sphinx-sample.tsv
 
 RUN apt-get update -y && apt-get install -y wget mysql-client libmysqlclient-dev && \
     wget -O sphinx.tar.gz http://sphinxsearch.com/files/sphinx-3.0.3-facc3fb-linux-amd64-glibc2.12.tar.gz && \
